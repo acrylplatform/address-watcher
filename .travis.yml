@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "10"
+branches:
+  only:
+  - master
+install:
+  - npm install
+script:
+  - npm run build
+deploy:
+  - provider: lambda
+    function_name: "address-watcher"
+    region: "eu-central-1"
+    role: "arn:aws:iam::340336286833:role/service-role/DynamodbReadWrite"
+    runtime: "nodejs10.x"
+    handler_name: "handler"
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    memory_size: "2048"
+    timeout: "20"
+    on:
+      branch: master
