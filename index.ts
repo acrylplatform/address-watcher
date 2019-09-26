@@ -23,7 +23,7 @@ const getListAssetTransfer = async address => {
 
 //Get array with objects from database
 const getDataDynamoDB = new Promise((resolve, reject) => {
-    dynamoDb.scan({TableName: "client"}).promise()
+    dynamoDb.scan({TableName: process.env.TableName}).promise()
                     .then(data => resolve(data.Items));
 });
 
@@ -43,7 +43,7 @@ const setDataDynamoDB = (clients, listTxAssetID) => {
         return await new Promise((resolve, reject) => {
             var now = new Date();
             let params = {
-                TableName: 'client',  
+                TableName: process.env.TableName,  
                 Item: {
                     "address":      customer.address     ? customer.address: 'no value',
                     "countMiners":  customer.countMiners ? customer.countMiners: 0,
