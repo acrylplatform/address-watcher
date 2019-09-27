@@ -13,9 +13,9 @@ var dynamoDb = new AWS.DynamoDB.DocumentClient();
 const ADDRESS = process.env.ADDRESS;
 const privateKey = process.env.privateKey;
 
-//Get list transactions with typy of Asset Transfer (type == 4)
+//Get list transactions with type of Asset Transfer (type == 4)
 const getListAssetTransfer = async address => {
-    const URL = `https://nodestestnet.acrylplatform.com/transactions/address/${address}/limit/100`;
+    const URL = `https://nodes.acrylplatform.com/transactions/address/${address}/limit/100`;                
     const res = await axios(URL);
     var filtered = where(res.data[0], {"type": 4});
     return filtered;
@@ -101,7 +101,7 @@ const getCustomerInfo = (addresses: Array<any>): Promise<object> => {
 
     return Promise.all(
         addresses.map(async (address: any) => {
-                const url = `https://nodestestnet.acrylplatform.com/transactions/info/${address}`;
+                const url = `https://nodes.acrylplatform.com/transactions/info/${address}`;
                 const res = await axios(url);
                 return dataDecrypt(res.data);
         })
