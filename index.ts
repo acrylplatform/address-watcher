@@ -53,7 +53,7 @@ const setDataDynamoDB = (clients, listTxAssetID) => {
                     "email":        customer.email       ? customer.email: 'no value',
                     "phone":        customer.phone       ? customer.phone: 'no value',
                     "postCode":     customer.postCode    ? customer.postCode: 'no value',
-                    "сity":         customer.city        ? customer.city: 'no value',
+                    "city":         customer.city        ? customer.city: 'no value',
                     "referal":      customer.referal     ? customer.referal: 'no value',
                     "date":         now.toDateString(),
                     "TxAssetID":    listTxAssetID[index]
