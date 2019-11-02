@@ -5,7 +5,7 @@ branches:
   only:
   - master
 install:
-  - npm install
+  - npm install --only=prod
 script:
   - npm run build
 deploy:
