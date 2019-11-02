@@ -11,7 +11,8 @@ var dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 // Enter ADDRESS and privateKey for check transactions type of Aset Transfer
 const ADDRESS = process.env.ADDRESS;
-const privateKey = process.env.privateKey;
+const PRIVATEKEY = process.env.privateKey;
+const TABLENAME = process.env.TableName;
 
 //Get list transactions with type of Asset Transfer (type == 4)
 const getListAssetTransfer = async address => {
@@ -23,7 +24,7 @@ const getListAssetTransfer = async address => {
 
 //Get array with objects from database
 const getDataDynamoDB = new Promise((resolve, reject) => {
-    dynamoDb.scan({TableName: process.env.TableName}).promise()
+    dynamoDb.scan({TableName: TABLENAME}).promise()
                     .then(data => resolve(data.Items));
 });
 
@@ -43,7 +44,7 @@ const setDataDynamoDB = (clients, listTxAssetID) => {
         return await new Promise((resolve, reject) => {
             var now = new Date();
             let params = {
-                TableName: process.env.TableName,  
+                TableName: TABLENAME,  
                 Item: {
                     "address":      customer.address     ? customer.address: 'no value',
                     "countMiners":  customer.countMiners ? customer.countMiners: 0,
@@ -91,7 +92,7 @@ const getAddressFromAttachment = item => {
 const dataDecrypt = (dataRes: any):Object => {
 
     const encryptedMessage = dataRes.data[0].value.toString();
-    const trasportKey = getTransportKey(dataRes.senderPublicKey, privateKey);
+    const trasportKey = getTransportKey(dataRes.senderPublicKey, PRIVATEKEY);
     const decrypt = utils.crypto.decryptSeed(encryptedMessage, trasportKey, 5000);
     return JSON.parse(decrypt);
 
@@ -108,7 +109,7 @@ const getCustomerInfo = (addresses: Array<any>): Promise<object> => {
     );
 };
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async () => {
     //Generate array from Blockchain
     const dataBlockchainArray = await getListAssetTransfer(ADDRESS);
     let listTxAssetID= new Array;
@@ -129,6 +130,7 @@ exports.handler = async (event, context, callback) => {
     .then(dataDiff => {
         return getCustomerInfo(dataDiff);
     })
+    
     .then((customerInfo: any) => {
         return setDataDynamoDB(customerInfo, listTxAssetID);
     })
